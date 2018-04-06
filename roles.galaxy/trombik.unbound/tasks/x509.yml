@@ -1,0 +1,5 @@
+---
+
+- name: Include x509-certificate
+  include_role:
+    name: trombik.x509-certificate

@@ -1,0 +1,6 @@
+---
+
+- name: Restart dhcpd-openbsd
+  service:
+    name: "{{ dhcpd_openbsd_service }}"
+    state: restarted

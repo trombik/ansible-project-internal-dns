@@ -1,3 +1,7 @@
+## Release 1.1.2
+
+* e0af544 [bugfix] vim-lite has moved (#3)
+
 ## Release 1.1.1
 
 * 44841f0 [bugfix] Update rubocop to the latest (#1)

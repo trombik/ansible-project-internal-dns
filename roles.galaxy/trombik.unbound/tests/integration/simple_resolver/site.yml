@@ -1,0 +1,2 @@
+- import_playbook: resolver.yml
+- import_playbook: client.yml

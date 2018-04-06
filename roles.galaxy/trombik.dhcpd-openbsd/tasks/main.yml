@@ -1,0 +1,18 @@
+---
+# tasks file for ansible-role-dhcpd_openbsd
+
+- include_vars: "{{ ansible_os_family }}.yml"
+
+- include: "install-{{ ansible_os_family }}.yml"
+
+- name: Create dhcpd_openbsd.conf
+  template:
+    src: dhcpd.conf.j2
+    dest: "{{ dhcpd_openbsd_conf_file }}"
+    validate: echo %s
+  notify: Restart dhcpd-openbsd
+
+- name: Start dhcpd_openbsd
+  service:
+    name: "{{ dhcpd_openbsd_service }}"
+    state: started
