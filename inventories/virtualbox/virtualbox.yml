@@ -1,19 +1,20 @@
 ---
 all:
   hosts:
-    example.trombik.org:
+    ns1.i.trombik.org:
       vagrant_priority: 10
-      ansible_host: 172.16.100.100
+      ansible_host: 172.16.100.254
+      vagrant_box: trombik/ansible-openbsd-6.2-amd64
   children:
-    example:
+    ns:
       hosts:
-        example.trombik.org:
-    virtualbox-example:
+        ns1.i.trombik.org:
+    virtualbox-ns:
       children:
-        example:
+        ns:
     virtualbox-credentials:
       children:
-        example:
+        ns:
     virtualbox:
       children:
-        example:
+        ns:

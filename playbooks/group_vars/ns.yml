@@ -1,0 +1,44 @@
+---
+
+unbound_config_server:
+  - name: interface
+    values: "{{ ansible_all_ipv4_addresses }}"
+  - "outgoing-interface: {{ ansible_default_ipv4.address }}"
+  - "do-not-query-localhost: yes"
+  - "do-ip4: yes"
+  - "do-ip6: no"
+  - "hide-identity: yes"
+  - "hide-version: yes"
+  - name: access-control
+    values:
+      - 0.0.0.0/0 allow
+
+project_dhcpd_openbsd_flags: "{{ project_subnets | map(attribute = 'device') | list }}"
+
+dhcpd_openbsd_flags: "{{ project_dhcpd_openbsd_flags | join(' ') }}"
+dhcpd_openbsd_conf: |
+  option domain-name "{{ ansible_domain }}";
+  option domain-name-servers {{ project_domain_name_servers }};
+  default-lease-time 3600;
+  max-lease-time 7200;
+  {% for subnet in project_subnets %}
+  subnet {{ subnet['ipv4']['network'] }} netmask {{ subnet['ipv4']['netmask'] }} {
+    range {{ subnet['range_from'] }} {{ subnet['range_to'] }};
+    option broadcast-address {{ subnet['ipv4']['broadcast'] }};
+    option routers {{ subnet['routers'] }};
+  }
+  {% endfor %}
+
+pf_rule: |
+  block return
+  # pass SSH to me
+  pass quick proto tcp from any to self port ssh
+  # pass lo
+  pass quick on lo all
+  # pass all ICMPs
+  pass quick inet  proto icmp  from any to self
+  pass quick inet6 proto icmp6 from any to self
+  # pass all packets from me
+  pass quick from self to any
+  # pass DNS packets to me
+  pass quick proto {tcp, udp} from any to self port domain

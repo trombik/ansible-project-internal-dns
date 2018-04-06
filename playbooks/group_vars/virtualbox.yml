@@ -1,0 +1,16 @@
+---
+project_domain_name_servers: "{{ ansible_em1['ipv4'][0]['address'] }}"
+
+project_subnets:
+  - device: "{{ ansible_em1['device'] }}"
+    ipv4: "{{ ansible_em1['ipv4'][0] }}"
+    range_from: "{{ ansible_em1['ipv4'][0]['network'] | regex_replace('\\.\\d+$', '.100') }}"
+    range_to: "{{ ansible_em1['ipv4'][0]['network'] | regex_replace('\\.\\d+$', '.200') }}"
+    routers: "{{ ansible_em1['ipv4'][0]['address'] }}"
+
+project_groups:
+  - option: use-host-decl-names on;
+    hosts:
+      - name: foo
+        hardware: ethernet 08:00:2b:4c:29:32
+        fixed-address: foo.i.trombik.org

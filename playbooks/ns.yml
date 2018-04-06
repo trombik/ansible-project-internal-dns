@@ -1,6 +1,6 @@
 ---
 - hosts:
-  - virtualbox-example
+  - virtualbox-ns
   become: yes
   become_method: sudo
   environment:
@@ -15,3 +15,6 @@
     - trombik.zsh
     - trombik.vim
     - trombik.git
+    - trombik.pf
+    - trombik.unbound
+    - trombik.dhcpd-openbsd
