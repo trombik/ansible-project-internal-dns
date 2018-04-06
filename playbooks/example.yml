@@ -1,0 +1,17 @@
+---
+- hosts:
+  - virtualbox-example
+  become: yes
+  become_method: sudo
+  environment:
+    http_proxy: "{{ http_proxy | default() }}"
+    https_proxy: "{{ https_proxy | default() }}"
+    no_proxy: "{{ no_proxy | default() }}"
+  pre_tasks:
+    - debug: var=hostvars[inventory_hostname]
+  roles:
+    - trombik.hostname
+    - trombik.hosts
+    - trombik.zsh
+    - trombik.vim
+    - trombik.git

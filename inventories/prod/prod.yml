@@ -1,0 +1,29 @@
+---
+
+_meta:
+  terraform:
+    example.trombik.org:
+      tags:
+        Name: example.trombik.org
+        stage: prod
+
+mx1.trombik.org:
+  children:
+    tag_Name_example_trombik_org:
+  vars:
+    ansible_python_interpreter: /usr/local/bin/python2.7
+mx:
+  children:
+    example.trombik.org:
+
+prod-example:
+  children:
+    example:
+
+prod-credentials:
+  children:
+    example:
+
+prod:
+  children:
+    prod-example:

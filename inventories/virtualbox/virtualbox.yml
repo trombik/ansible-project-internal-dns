@@ -1,0 +1,19 @@
+---
+all:
+  hosts:
+    example.trombik.org:
+      vagrant_priority: 10
+      ansible_host: 172.16.100.100
+  children:
+    example:
+      hosts:
+        example.trombik.org:
+    virtualbox-example:
+      children:
+        example:
+    virtualbox-credentials:
+      children:
+        example:
+    virtualbox:
+      children:
+        example:
