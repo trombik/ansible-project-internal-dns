@@ -1,0 +1,7 @@
+---
+
+- name: Get unbound version
+  shell: "yum -q list all {{ unbound_package }} | awk '$1 ~ /{{ unbound_package }}/ { print $2 }' | cut -d':' -f2 | cut -d'-' -f1"
+  register: register_unbound_version
+  check_mode: no
+  changed_when: false

@@ -1,6 +1,6 @@
 ---
 - hosts: resolver
-  become: yes 
+  become: yes
   become_method: sudo
   environment:
     http_proxy: "{{ http_proxy | default() }}"
@@ -12,19 +12,14 @@
     - ansible-role-unbound
 
   vars:
-    unbound_config_chroot: "/var/unbound"
-    unbound_config_server:
-      - name: access-control
-        values:
-          - 0.0.0.0/0 refuse
-          - 127.0.0.0/8 allow
-          - 192.168.21.0/24 allow
-      - name: interface
-        values: "{{ ansible_all_ipv4_addresses }}"
-      - "outgoing-interface: {{ ansible_default_ipv4.address }}"
-      - name: private-domain
-        value: '"example.com"'
-    # unbound in ubuntu 14.04 does not support unix socket
-    unbound_config_remote_control_control_interface: "{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('14.04', '<=')) or (ansible_distribution == 'CentOS' and ansible_distribution_version | version_compare('7.4.1708', '<=')) %}127.0.0.1{% else %}/var/run/unbound.sock{% endif %}"
-    unbound_forward_zone: []
-    unbound_stub_zone: []
+    unbound_config: |
+      server:
+        chroot: "/var/unbound"
+        access-control: 0.0.0.0/0 refuse
+        access-control: 127.0.0.0/8 allow
+        access-control: 192.168.21.0/24 allow
+      {% for address in ansible_all_ipv4_addresses %}
+        interface: {{ address }}
+      {% endfor %}
+        outgoing-interface: {{ ansible_default_ipv4.address }}
+        private-domain: "example.com"

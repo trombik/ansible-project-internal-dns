@@ -1,3 +1,30 @@
+## Release 3.0.0
+
+* 8ab8f76 [bugfix] make unbound_version `--check` safe, update and fix README (#11)
+* cc08ff6 [feature] Support OpenBSD 6.3, drop EoLed releases (#10)
+* 551813b [backward incompatible] introduce unbound_config (#9)
+
+### Backward incompatibilities
+
+This release introduces backward incompatibilities.
+
+The major incompatibility is that `unbound.conf(5)` is now empty, allowing
+users to build arbitrary one.
+
+Also, `chroot(8)` support has been dropped.
+
+As a result, the following variables have been removed.
+
+* `unbound_config_chroot`
+* `unbound_freebsd_chroot_devfs_ruleset_number`
+* `unbound_config_server`
+* `unbound_config_remote_control_control_enable`
+* `unbound_config_remote_control_control_use_cert`
+* `unbound_config_remote_control_control_interface`
+* `unbound_config_remote_control_extra`
+* `unbound_forward_zone`
+* `unbound_stub_zone`
+
 ## Release 2.3.0
 
 * 3cdfb44 [feature][bugfix] replace `include` with `include_*`, requiring ansible 2.4 #7

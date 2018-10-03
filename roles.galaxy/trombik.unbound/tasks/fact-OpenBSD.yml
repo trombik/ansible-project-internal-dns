@@ -1,0 +1,7 @@
+---
+
+- name: Get unbound version
+  shell: "unbound -h | grep -E '^Version[[:space:]]+[[:digit:].]+$' | cut -f 2 -d' '"
+  register: register_unbound_version
+  check_mode: no
+  changed_when: false
