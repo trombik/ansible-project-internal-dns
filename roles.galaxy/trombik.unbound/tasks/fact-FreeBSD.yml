@@ -1,0 +1,7 @@
+---
+
+- name: Get unbound version
+  shell: "pkg search -S name -e -Q version {{ unbound_package }} | grep '^Version' | sed -E -e 's/Version[[:space:]]+:[[:space:]]+//' | cut -d'_' -f1"
+  register: register_unbound_version
+  check_mode: no
+  changed_when: false

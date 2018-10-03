@@ -3,40 +3,42 @@
 
 - include_vars: "{{ ansible_os_family }}.yml"
 
-- import_tasks: deprecate.yml
-
 - set_fact:
     unbound_flags_merged: "{{ unbound_flags_default | combine(unbound_flags) }}"
 
-- include_tasks: "install-{{ ansible_os_family }}.yml"
+- name: Include fact-{{ ansible_os_family }}.yml
+  include_tasks: "fact-{{ ansible_os_family }}.yml"
 
-- import_tasks: "x509.yml"
+- name: Assert register_unbound_version is defined
+  assert:
+    that:
+      - register_unbound_version is defined
+    msg: |
+      [BUG] register_unbound_version must be defined by
+      fact-{{ ansible_os_family }}.yml, but register_unbound_version is not
+      defined. This means the role has a bug in it.
+
+- set_fact:
+    unbound_version: "{{ register_unbound_version.stdout }}"
+
+- name: Assert unbound_version is in the expected format
+  assert:
+    that:
+      - unbound_version | match('^\d+\.\d+\.\d+$')
+    msg: |
+      [BUG] unbound_version does not match expected version pattern.
+      This means the role has a bug in it.
+
+- name: Include install-{{ ansible_os_family }}.yml
+  include_tasks: "install-{{ ansible_os_family }}.yml"
+
+- name: Include x509.yml if unbound_include_role_x509_certificate
+  import_tasks: "x509.yml"
   when:
     - unbound_include_role_x509_certificate
 
-- include_tasks: "configure-{{ ansible_os_family }}.yml"
-
-- name: Register unbound version
-  shell: "unbound -h | grep -E '^Version[[:space:]]+[[:digit:].]+$' | cut -f 2 -d' '"
-  register: register_unbound_version
-  changed_when: false
-  check_mode: no
-
-- set_fact:
-    # unbound_version is available for use from this point. note that this
-    # fact, unlike facts defined by "setup" action, cannot be used in playbooks,
-    # group_var, etc.
-    unbound_version: "{{ register_unbound_version.stdout }}"
-
-- assert:
-    that:
-      - unbound_version | match('\d+[\d.]+\d+')
-  when:
-    - not ansible_check_mode
-
-- include_tasks: "chroot-{{ ansible_os_family }}.yml"
-  when:
-    - unbound_config_chroot != ''
+- name: Include "configure-{{ ansible_os_family }}.yml"
+  include_tasks: "configure-{{ ansible_os_family }}.yml"
 
 - name: Create unbound_script_dir
   file:

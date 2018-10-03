@@ -75,67 +75,61 @@
             -----END RSA PRIVATE KEY-----
     unbound_include_role_x509_certificate: yes
     unbound_config_chroot: ""
-    unbound_config_server:
-      - name: ssl-port
-        value: 853
-      - name: ssl-service-pem
-        value: "{{ unbound_conf_dir }}/certs/unbound.pem"
-      - name: ssl-service-key
-        value: "{{ unbound_conf_dir }}/certs/unbound.key"
-      - name: interface
-        values:
-          - 127.0.0.1
-          - 127.0.0.1@853
-          - "{{ ansible_default_ipv4.address }}"
-      - "outgoing-interface: {{ ansible_default_ipv4.address }}"
-      - "do-not-query-localhost: yes"
-      - "do-ip4: yes"
-      - "do-ip6: no"
-      - "hide-identity: yes"
-      - "hide-version: yes"
-      # you may use dict, too
-      - name: use-syslog
-        value: "yes"
-      # some settings are allowed to appear multiple times, which makes
-      # `unbound.conf(5)` different from YAML.
-      - name: local-zone
-        values:
-          - 10.in-addr.arpa nodefault
-          - 168.192.in-addr.arpa nodefault
-      - name: access-control
-        values:
-          - 0.0.0.0/0 refuse
-          - 127.0.0.0/8 allow
-          - 10.100.1.0/24 allow
-      - name: private-address
-        values:
-          - 10.0.0.0/8
-          - 172.16.0.0/12
-          - 192.168.0.0/16
-          - 192.254.0.0/16
-          - fc00::/7
-          - fd00::/8
-          - fe80::/10
-      - name: private-domain
-        values:
-          - '"example.com"'
-    # unbound in ubuntu 14.04 does not support unix socket
-    unbound_config_remote_control_control_interface: "{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('14.04', '<=')) or (ansible_distribution == 'CentOS' and ansible_distribution_version | version_compare('7.4.1708', '<=')) %}127.0.0.1{% else %}/var/run/unbound.sock{% endif %}"
-    unbound_forward_zone:
-      -
-        name: example.com
-        forward-addr:
-          - 8.8.8.8
-          - 8.8.4.4
-      -
-        name: example.org
-        forward-addr:
-          - 8.8.8.8
-    unbound_stub_zone:
-      - name: example.net
-        stub-addr:
-          - 8.8.8.8
-          - 8.8.4.4
-      - name: foo.example
-        stub-addr:
-          - 8.8.8.8
+    unbound_config: |
+      server:
+        chroot: ""
+        directory: "{{ unbound_directory }}"
+        outgoing-interface: {{ ansible_default_ipv4.address }}
+        do-not-query-localhost: yes
+        do-ip4: yes
+        do-ip6: no
+        hide-identity: yes
+        hide-version: yes
+        use-syslog: yes
+        local-zone: 10.in-addr.arpa nodefault
+        local-zone: 168.192.in-addr.arpa nodefault
+        access-control: 0.0.0.0/0 refuse
+        access-control: 127.0.0.0/8 allow
+        access-control: 10.100.1.0/24 allow
+        private-address: 10.0.0.0/8
+        private-address: 172.16.0.0/12
+        private-address: 192.168.0.0/16
+        private-address: 192.254.0.0/16
+        private-address: fc00::/7
+        private-address: fd00::/8
+        private-address: fe80::/10
+        private-domain: "example.com"
+        interface: 127.0.0.1
+        interface: 127.0.0.1@853
+        interface: {{ ansible_default_ipv4.address }}
+        ssl-port: 853
+        ssl-service-pem: "{{ unbound_conf_dir }}/certs/unbound.pem"
+        ssl-service-key: "{{ unbound_conf_dir }}/certs/unbound.key"
+      forward-zone:
+        name: "example.com"
+        forward-addr: "8.8.8.8"
+        forward-addr: "8.8.4.4"
+      forward-zone:
+        name: "example.org"
+        forward-addr: "8.8.8.8"
+      stub-zone:
+        name: "example.net"
+        stub-addr: "8.8.8.8"
+        stub-addr: "8.8.4.4"
+      stub-zone:
+        name: "foo.example"
+        stub-addr: "8.8.8.8"
+      remote-control:
+        control-enable: yes
+      {% if unbound_version | version_compare('1.5.2', '>=') %}
+        control-use-cert: no
+      {% endif %}
+      {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('14.04', '<=')) or (ansible_distribution == 'CentOS' and ansible_distribution_version | version_compare('7.4.1708', '<=')) %}
+        control-interface: 127.0.0.1
+      {% else %}
+        control-interface: /var/run/unbound.sock
+      {% endif %}
+        server-key-file: {{ unbound_conf_dir }}/unbound_server.key
+        server-cert-file: {{ unbound_conf_dir }}/unbound_server.pem
+        control-key-file: {{ unbound_conf_dir }}/unbound_control.key
+        control-cert-file: {{ unbound_conf_dir }}/unbound_control.pem

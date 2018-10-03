@@ -1,0 +1,9 @@
+---
+
+- name: Get unbound version
+  shell: "apt show {{ unbound_package }} | grep 'Version:' | sed -e 's/^Version: //' | cut -d ':' -f2 | cut -d '-' -f1"
+  register: register_unbound_version
+  check_mode: no
+  changed_when: false
+  when:
+    - ansible_distribution == 'Ubuntu'

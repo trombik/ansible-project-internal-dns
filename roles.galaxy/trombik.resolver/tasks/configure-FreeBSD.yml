@@ -1,0 +1,12 @@
+---
+# tasks file for ansible-role-resolver
+
+- name: Create resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+
+- name: Create resolvconf.conf
+  template:
+    src: resolvconf.conf.j2
+    dest: /etc/resolvconf.conf

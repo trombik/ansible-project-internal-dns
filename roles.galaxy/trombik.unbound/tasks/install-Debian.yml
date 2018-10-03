@@ -2,7 +2,7 @@
 
 - name: Install unbound
   apt:
-    name: unbound
+    name: "{{ unbound_package }}"
     state: present
 
 - name: Install ldnsutils

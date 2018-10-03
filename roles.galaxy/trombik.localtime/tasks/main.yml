@@ -1,0 +1,11 @@
+---
+# tasks file for ansible-role-localtime
+
+- include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Set localtime
+  file:
+    force: yes
+    dest: /etc/localtime
+    src: "{{ localtime_zoneinfo_dir }}/{{ localtime_zone[ansible_os_family] }}"
+    state: link
