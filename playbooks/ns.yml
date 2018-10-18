@@ -1,6 +1,7 @@
 ---
 - hosts:
   - virtualbox-ns
+  - prod-ns
   become: yes
   become_method: sudo
   environment:
@@ -11,10 +12,9 @@
     - debug: var=hostvars[inventory_hostname]
   roles:
     - trombik.hostname
+    - trombik.localtime
     - trombik.hosts
-    - trombik.zsh
-    - trombik.vim
-    - trombik.git
     - trombik.pf
     - trombik.unbound
-    - trombik.dhcpd-openbsd
+    - trombik.resolver
+    - trombik.dhcpd_openbsd
