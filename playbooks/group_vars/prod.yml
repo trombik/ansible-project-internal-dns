@@ -1,0 +1,38 @@
+---
+project_domain_name_servers: "{{ ansible_default_ipv4['address'] }}"
+
+project_subnets:
+  - device: "{{ ansible_default_ipv4['device'] }}"
+    ipv4:
+      network: "{{ ansible_default_ipv4['network'] }}"
+      netmask: "{{ ansible_default_ipv4['broadcast'] }}"
+    range_from: "{{ ansible_default_ipv4['network'] | regex_replace('\\.\\d+$', '.2') }}"
+    range_to:   "{{ ansible_default_ipv4['network'] | regex_replace('\\.\\d+$', '.99') }}"
+    routers: "{{ ansible_default_ipv4['gateway'] }}"
+
+project_unbound_acl:
+  - 0.0.0.0/0 refuse
+  - ::0/0 refuse
+  - "{{ ansible_default_ipv4['network'] }}/24"
+  - 127.0.0.0/8 allow
+  - ::1 allow
+
+project_hosts:
+  - name: x270
+    mac: 44:03:2c:67:fb:65
+    ipv4: 192.168.11.100
+  - name: alix2
+    mac: 7c:8b:ca:1d:78:81
+    ipv4: 192.168.11.200
+  - name: octopi
+    mac: b8:27:eb:62:91:89
+    ipv4: 192.168.11.201
+  - name: obuild
+    mac: cc:e1:d5:1a:f0:a1
+    ipv4: 192.168.11.202
+  - name: opi1
+    mac: 02:81:3f:0e:4a:2b
+    ipv4: 192.168.11.254
+  - name: dpbarm1
+    mac: cc:e1:d5:1a:f0:a1
+    ipv4: 192.168.11.202
