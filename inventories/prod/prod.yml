@@ -1,29 +1,19 @@
 ---
-
-_meta:
-  terraform:
-    example.trombik.org:
-      tags:
-        Name: example.trombik.org
-        stage: prod
-
-mx1.trombik.org:
+all:
+  hosts:
+    ns1.i.trombik.org:
+      ansible_host: 192.168.11.254
+      ansible_python_interpreter: /usr/local/bin/python2.7
   children:
-    tag_Name_example_trombik_org:
-  vars:
-    ansible_python_interpreter: /usr/local/bin/python2.7
-mx:
-  children:
-    example.trombik.org:
-
-prod-example:
-  children:
-    example:
-
-prod-credentials:
-  children:
-    example:
-
-prod:
-  children:
-    prod-example:
+    ns:
+      hosts:
+        ns1.i.trombik.org:
+    prod-ns:
+      children:
+        ns:
+    prod-credentials:
+      children:
+        ns:
+    prod:
+      children:
+        ns:

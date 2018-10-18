@@ -1,0 +1,4 @@
+---
+
+resolver_nameservers:
+  - 172.16.100.254

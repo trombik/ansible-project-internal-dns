@@ -1,31 +1,54 @@
 ---
+resolver_nameservers:
+  - "{{ ansible_default_ipv4.address }}"
 
-unbound_config_server:
-  - name: interface
-    values: "{{ ansible_all_ipv4_addresses }}"
-  - "outgoing-interface: {{ ansible_default_ipv4.address }}"
-  - "do-not-query-localhost: yes"
-  - "do-ip4: yes"
-  - "do-ip6: no"
-  - "hide-identity: yes"
-  - "hide-version: yes"
-  - name: access-control
-    values:
-      - 0.0.0.0/0 allow
+unbound_config: |
+  server:
+    chroot: ""
+    directory: {{ unbound_directory }}
+  {% for addr in ansible_all_ipv4_addresses %}
+    interface: {{ addr }}
+  {% endfor %}
+    outgoing-interface: {{ ansible_default_ipv4.address }}
+    do-not-query-localhost: yes
+    do-ip4: yes
+    do-ip6: yes
+    hide-identity: yes
+    hide-version: yes
+  {% for policy in project_unbound_acl %}
+    access-control: {{ policy }}
+  {% endfor %}
+    private-domain: {{ ansible_domain }}
+    local-zone: "i.trombik.org." static
+  {% for host in project_hosts %}
+    local-data: "{{ host['name'] }}.{{ ansible_domain }}. 86400 IN A {{ host['ipv4'] }}"
+  {% endfor %}
+remote-control:
+  control-enable: yes
+  control-use-cert: no
+  control-interface: /var/run/unbound.sock
 
 project_dhcpd_openbsd_flags: "{{ project_subnets | map(attribute = 'device') | list }}"
 
 dhcpd_openbsd_flags: "{{ project_dhcpd_openbsd_flags | join(' ') }}"
 dhcpd_openbsd_conf: |
   option domain-name "{{ ansible_domain }}";
-  option domain-name-servers {{ project_domain_name_servers }};
-  default-lease-time 3600;
-  max-lease-time 7200;
+  default-lease-time 86400;
+  max-lease-time 86400;
   {% for subnet in project_subnets %}
   subnet {{ subnet['ipv4']['network'] }} netmask {{ subnet['ipv4']['netmask'] }} {
-    range {{ subnet['range_from'] }} {{ subnet['range_to'] }};
-    option broadcast-address {{ subnet['ipv4']['broadcast'] }};
     option routers {{ subnet['routers'] }};
+    option broadcast-address {{ subnet['ipv4']['broadcast'] }};
+    option domain-name-servers {{ project_domain_name_servers }};
+    range {{ subnet['range_from'] }} {{ subnet['range_to'] }};
+    {% for host in project_hosts %}
+
+    host {{ host['name'] }} {
+      hardware ethernet {{ host['mac'] }};
+      fixed-address {{ host['name'] }}.{{ ansible_domain }};
+    }
+    {% endfor %}
+
   }
   {% endfor %}
 
@@ -42,3 +65,5 @@ pf_rule: |
   pass quick from self to any
   # pass DNS packets to me
   pass quick proto {tcp, udp} from any to self port domain
+  # pass DHCP
+  pass quick proto udp from any to any port { bootpc, bootps }
