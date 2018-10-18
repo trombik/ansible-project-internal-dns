@@ -1,3 +1,9 @@
+## Release 3.0.1
+
+* 217ab1b feature: support FreeBSD 10.4
+* 69f654d bugfix: QA
+* 0726a47 bugfix: drop FreeBSD 10.3 and Ubuntu 14.04 from the tests (#13)
+
 ## Release 3.0.0
 
 * 8ab8f76 [bugfix] make unbound_version `--check` safe, update and fix README (#11)
