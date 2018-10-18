@@ -9,8 +9,8 @@
   template:
     src: dhcpd.conf.j2
     dest: "{{ dhcpd_openbsd_conf_file }}"
-    validate: echo %s
-  notify: Restart dhcpd-openbsd
+    validate: dhcpd -n -c %s
+  notify: Restart dhcpd_openbsd
 
 - name: Start dhcpd_openbsd
   service:
