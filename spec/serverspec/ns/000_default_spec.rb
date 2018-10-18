@@ -40,9 +40,9 @@ end
 describe file "/etc/dhcpd.conf" do
   it { should be_file }
   its(:content) { should match(/^option domain-name "#{domain_name}";$/) }
-  its(:content) { should match(/^option domain-name-servers #{domain_name_servers};$/) }
-  its(:content) { should match(/^default-lease-time 3600;$/) }
-  its(:content) { should match(/^max-lease-time 7200;$/) }
+  its(:content) { should match(/option domain-name-servers #{domain_name_servers};$/) }
+  its(:content) { should match(/^default-lease-time 86400;$/) }
+  its(:content) { should match(/^max-lease-time 86400;$/) }
   subnets.each do |subnet|
     its(:content) { should match(/^subnet #{subnet[:network]} netmask #{subnet[:netmask]} {/) }
   end
@@ -51,4 +51,10 @@ end
 describe command "#{dig_command} example.org @10.0.2.15" do
   its(:exit_status) { should eq 0 }
   its(:stdout) { should match(/^;.*status: NOERROR/) }
+end
+
+describe command "date +%z" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq "" }
+  its(:stdout) { should match(/^\+0700$/) }
 end
