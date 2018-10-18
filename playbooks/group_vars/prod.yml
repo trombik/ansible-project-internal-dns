@@ -13,7 +13,7 @@ project_subnets:
 project_unbound_acl:
   - 0.0.0.0/0 refuse
   - ::0/0 refuse
-  - "{{ ansible_default_ipv4['network'] }}/24"
+  - "{{ ansible_default_ipv4['network'] }}/24 allow"
   - 127.0.0.0/8 allow
   - ::1 allow
 
@@ -30,6 +30,12 @@ project_hosts:
   - name: obuild
     mac: cc:e1:d5:1a:f0:a1
     ipv4: 192.168.11.202
+  - name: fx230
+    mac: 0:c0:c3:22:46:81
+    ipv4: 192.168.11.203
+  - name: ox230
+    mac: 0:c0:c3:22:46:82
+    ipv4: 192.168.11.203
   - name: opi1
     mac: 02:81:3f:0e:4a:2b
     ipv4: 192.168.11.254
