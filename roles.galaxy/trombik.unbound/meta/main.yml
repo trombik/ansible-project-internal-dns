@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: unbound
   author: Tomoyuki Sakurai
   description: Configures unbound
   company: Reallyenglish
@@ -8,7 +9,7 @@ galaxy_info:
   platforms:
   - name: FreeBSD
     versions:
-    - 10.3
+    - 10.4
     - 11.1
   - name: OpenBSD
     versions:

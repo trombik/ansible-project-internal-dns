@@ -1,8 +1,8 @@
 ---
 - name: trombik.localtime
   version: 1.1.0
-- name: trombik.dhcpd-openbsd
-  version: 1.1.0
+- name: trombik.dhcpd_openbsd
+  version: 1.2.1
 - name: trombik.vim
   version: 1.1.2
 - name: trombik.zsh
@@ -16,6 +16,6 @@
 - name: trombik.pf
   version: 1.1.0
 - name: trombik.unbound
-  version: 3.0.0
+  version: 3.1.0
 - name: trombik.resolver
   version: 2.0.2
