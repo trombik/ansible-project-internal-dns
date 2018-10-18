@@ -1,3 +1,4 @@
 ---
 
-- include: ns.yml
+- import_playbook: ns.yml
+- import_playbook: client.yml
