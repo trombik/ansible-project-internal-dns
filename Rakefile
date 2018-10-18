@@ -76,6 +76,8 @@ task :up do
     with_retries(retry_opts) do |_attempt_number|
       sh "ansible -i #{inventory_path} --ssh-common-args '-o \"UserKnownHostsFile /dev/null\" -o \"StrictHostKeyChecking no\"' --user 'ec2-user' -m ping all"
     end
+  when "prod"
+    sh "ansible -i #{inventory_path} -m ping all"
   end
 end
 
@@ -96,6 +98,8 @@ task :provision do
     vagrant "provision"
   when "staging"
     sh "ansible-playbook -i #{inventory_path} --ssh-common-args '-o \"UserKnownHostsFile /dev/null\" -o \"StrictHostKeyChecking no\"' --user 'ec2-user' playbooks/site.yml"
+  when "prod"
+    sh "ansible-playbook -vv -i #{inventory_path} --ask-become-pass playbooks/site.yml"
   end
 end
 
@@ -175,6 +179,8 @@ namespace :test do
                           Vagrant::SSH::Config.for(h)["User".downcase]
                         when "staging"
                           "ec2-user"
+                        when "prod"
+                          ENV["USER"]
                         end
           configure_sudo_password_for(run_as_user)
           puts "running serverspec for #{g} on #{h} as user `#{run_as_user}`"
@@ -193,6 +199,8 @@ namespace :test do
                           Vagrant::SSH::Config.for(h)["User".downcase]
                         when "staging"
                           "ec2-user"
+                        when "prod"
+                          ENV["USER"]
                         end
           configure_sudo_password_for(run_as_user)
           puts "running serverspec for #{g} on #{h} as user `#{run_as_user}`"
