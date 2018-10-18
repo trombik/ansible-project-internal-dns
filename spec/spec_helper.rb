@@ -38,9 +38,18 @@ end
 
 # Returns path to inventory file
 #
-# @return [String]
+# @return [Pathname]
 def inventory_path
   Pathname.new(__FILE__)
           .parent
           .parent + "inventories" + test_environment
+end
+
+# Returns path to `playbooks`
+#
+# @return [Pathname]
+def playbooks_path
+  Pathname.new(__FILE__)
+          .parent
+          .parent + "playbooks"
 end
