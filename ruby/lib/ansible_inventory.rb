@@ -21,6 +21,7 @@ class AnsibleInventory
 
   # Returns parsed inventory content
   def config
+    return @config if @config
     cmd = "#{ansible_inventory_path} --inventory '#{@path}' --yaml --list"
     o, e, s = run_command(cmd)
     unless s.success?
