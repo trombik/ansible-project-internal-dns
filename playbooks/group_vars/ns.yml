@@ -18,8 +18,8 @@ unbound_config: |
   {% for policy in project_unbound_acl %}
     access-control: {{ policy }}
   {% endfor %}
-    private-domain: {{ ansible_domain }}
-    local-zone: "i.trombik.org." static
+    private-domain: {{ ansible_domain }}.
+    local-zone: "{{ ansible_domain }}." static
   {% for host in project_hosts %}
     local-data: "{{ host['name'] }}.{{ ansible_domain }}. 86400 IN A {{ host['ipv4'] }}"
   {% endfor %}
@@ -41,14 +41,13 @@ dhcpd_openbsd_conf: |
     option broadcast-address {{ subnet['ipv4']['broadcast'] }};
     option domain-name-servers {{ project_domain_name_servers }};
     range {{ subnet['range_from'] }} {{ subnet['range_to'] }};
-    {% for host in project_hosts %}
 
+  {% for host in project_hosts %}
     host {{ host['name'] }} {
       hardware ethernet {{ host['mac'] }};
       fixed-address {{ host['name'] }}.{{ ansible_domain }};
     }
-    {% endfor %}
-
+  {% endfor %}
   }
   {% endfor %}
 
