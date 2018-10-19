@@ -4,11 +4,12 @@ project_domain_name_servers: "{{ ansible_default_ipv4['address'] }}"
 project_subnets:
   - device: "{{ ansible_default_ipv4['device'] }}"
     ipv4:
-      network: "{{ ansible_default_ipv4['network'] }}"
-      netmask: "{{ ansible_default_ipv4['broadcast'] }}"
+      network:   "{{ ansible_default_ipv4['network'] }}"
+      broadcast: "{{ ansible_default_ipv4['broadcast'] }}"
+      netmask:   "{{ ansible_default_ipv4['netmask'] }}"
     range_from: "{{ ansible_default_ipv4['network'] | regex_replace('\\.\\d+$', '.2') }}"
     range_to:   "{{ ansible_default_ipv4['network'] | regex_replace('\\.\\d+$', '.99') }}"
-    routers: "{{ ansible_default_ipv4['gateway'] }}"
+    routers:    "{{ ansible_default_ipv4['gateway'] }}"
 
 project_unbound_acl:
   - 0.0.0.0/0 refuse

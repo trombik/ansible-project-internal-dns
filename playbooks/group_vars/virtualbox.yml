@@ -3,10 +3,13 @@ project_domain_name_servers: "{{ ansible_em1['ipv4'][0]['address'] }}"
 
 project_subnets:
   - device: "{{ ansible_em1['device'] }}"
-    ipv4: "{{ ansible_em1['ipv4'][0] }}"
+    ipv4:
+      network:   "{{ ansible_em1['ipv4'][0]['network'] }}"
+      broadcast: "{{ ansible_em1['ipv4'][0]['broadcast'] }}"
+      netmask:   "{{ ansible_em1['ipv4'][0]['netmask'] }}"
     range_from: "{{ ansible_em1['ipv4'][0]['network'] | regex_replace('\\.\\d+$', '.100') }}"
-    range_to: "{{ ansible_em1['ipv4'][0]['network'] | regex_replace('\\.\\d+$', '.200') }}"
-    routers: "{{ ansible_em1['ipv4'][0]['address'] }}"
+    range_to:   "{{ ansible_em1['ipv4'][0]['network'] | regex_replace('\\.\\d+$', '.200') }}"
+    routers:    "{{ ansible_em1['ipv4'][0]['address'] }}"
 
 project_unbound_acl:
   - 0.0.0.0/0 refuse
