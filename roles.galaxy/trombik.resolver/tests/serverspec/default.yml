@@ -12,4 +12,9 @@
     # of invalid DNS servers are used in the test, socket.getfqdn on OpenBSD
     # returns different value before and after the first play. use
     # ansible_hostname here to pass idempotency_test
-    resolver_nameservers: "{{ nameservers | predictable_shuffle(ansible_hostname) | list }}"
+    resolver_nameservers: "{{ nameservers | shuffle(seed = ansible_hostname) }}"
+    config_map:
+      OpenBSD: |
+        domain i.trombik.org
+        lookup file bind
+    resolver_config: "{{ config_map[ansible_os_family] | default('') }}"
