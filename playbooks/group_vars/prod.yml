@@ -36,8 +36,8 @@ project_hosts:
     ipv4: 192.168.11.203
   - name: ox230
     mac: 0:c0:c3:22:46:82
-    ipv4: 192.168.11.203
-  - name: opi1
+    ipv4: 192.168.11.204
+  - name: ns1
     mac: 02:81:3f:0e:4a:2b
     ipv4: 192.168.11.254
   - name: dpbarm1
