@@ -1,3 +1,7 @@
+# Managed by ansible
 {% for n in resolver_nameservers %}
 nameserver {{ n }}
 {% endfor %}
+# beginning of resolver_config
+{{ resolver_config }}
+# end of resolver_config

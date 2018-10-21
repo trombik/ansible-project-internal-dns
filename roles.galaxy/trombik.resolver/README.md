@@ -6,15 +6,6 @@ If DHCP client is running on the host, this role should not be used. Use
 [ansible-role-dhclient](https://github.com/reallyenglish/ansible-role-dhclient)
 instead.
 
-## predictable_shuffle filter
-
-`predictable_shuffle` shuffles a list, generates predictably shuffled list
-given strings.
-
-```
-{{ list_of_ip_address | predictable_shuffle(ansible_fqdn) | list }}
-```
-
 # Requirements
 
 None
@@ -24,6 +15,7 @@ None
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `resolver_nameservers` | list of resolvers | `[]` |
+| `resolver_config` | content of `resolv.conf(5)` | `""` |
 
 # Dependencies
 
@@ -33,26 +25,6 @@ None
 
 ```yaml
 - hosts: localhost
-  pre_tasks:
-    # XXX kill dhclient to ensure resolv.conf is never modified by it
-    - shell: dhclient -x
-      changed_when: false
-      ignore_errors: true # so that "kitchen converge && kitchen converge" works
-      when:
-        - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
-    - shell: pkill dhclient
-      when:
-        - ansible_os_family == 'OpenBSD'
-      changed_when: false
-      ignore_errors: true
-    - service:
-        name: dhclient
-        state: stopped
-      changed_when: false
-      ignore_errors: true
-      when:
-        - ansible_os_family == 'FreeBSD'
-
   roles:
     - ansible-role-resolver
   vars:
@@ -66,7 +38,12 @@ None
     # of invalid DNS servers are used in the test, socket.getfqdn on OpenBSD
     # returns different value before and after the first play. use
     # ansible_hostname here to pass idempotency_test
-    resolver_nameservers: "{{ nameservers | predictable_shuffle(ansible_hostname) | list }}"
+    resolver_nameservers: "{{ nameservers | shuffle(seed = ansible_hostname) }}"
+    config_map:
+      OpenBSD: |
+        domain i.trombik.org
+        lookup file bind
+    resolver_config: "{{ config_map[ansible_os_family] | default('') }}"
 ```
 
 # License
@@ -89,6 +66,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 # Author Information
 
-Tomoyuki Sakurai <tomoyukis@reallyenglish.com>
+Tomoyuki Sakurai <y@trombik.org>
 
 This README was created by [ansible-role-init](https://gist.github.com/trombik/d01e280f02c78618429e334d8e4995c0)
