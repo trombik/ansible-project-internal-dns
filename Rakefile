@@ -99,7 +99,7 @@ task :provision do
   when "staging"
     sh "ansible-playbook -i #{inventory_path} --ssh-common-args '-o \"UserKnownHostsFile /dev/null\" -o \"StrictHostKeyChecking no\"' --user 'ec2-user' playbooks/site.yml"
   when "prod"
-    sh "ansible-playbook -vv -i #{inventory_path} --ask-become-pass playbooks/site.yml"
+    sh "ansible-playbook -v -D -i #{inventory_path} --ask-become-pass playbooks/site.yml"
   end
 end
 
