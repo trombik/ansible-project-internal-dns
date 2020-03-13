@@ -24,6 +24,8 @@ subnets = case test_environment
                 ]
               }
             ]
+            # TODO: test this
+          else []
           end
 dig_command = case os[:family]
               when "openbsd"
