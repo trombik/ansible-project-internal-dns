@@ -1,3 +1,4 @@
+---
 unbound_user: "{{ __unbound_user }}"
 unbound_group: "{{ __unbound_group }}"
 unbound_service: unbound
@@ -11,9 +12,9 @@ unbound_script_dir: "{{ __unbound_script_dir }}"
 unbound_directory: "{{ __unbound_directory }}"
 unbound_include_role_x509_certificate: no
 
-unbound_config_server_key_file:   "{{ unbound_conf_dir }}/unbound_server.key"
-unbound_config_server_cert_file:  "{{ unbound_conf_dir }}/unbound_server.pem"
-unbound_config_control_key_file:  "{{ unbound_conf_dir }}/unbound_control.key"
+unbound_config_server_key_file: "{{ unbound_conf_dir }}/unbound_server.key"
+unbound_config_server_cert_file: "{{ unbound_conf_dir }}/unbound_server.pem"
+unbound_config_control_key_file: "{{ unbound_conf_dir }}/unbound_control.key"
 unbound_config_control_cert_file: "{{ unbound_conf_dir }}/unbound_control.pem"
 
 unbound_config: ""
