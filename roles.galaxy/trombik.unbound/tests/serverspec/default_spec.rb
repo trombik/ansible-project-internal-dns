@@ -57,7 +57,8 @@ describe file(flags_file) do
   when "ubuntu"
     its(:content) { should match(/^DAEMON_OPTS="-v -c #{Regexp.escape(config)}"$/) }
   when "freebsd"
-    its(:content) { should match(/^unbound_flags="-v -c #{Regexp.escape(config)}"$/) }
+    its(:content) { should match(/^unbound_flags="-v"$/) }
+    its(:content) { should match(/^unbound_config="#{Regexp.escape(config)}"$/) }
   end
 end
 

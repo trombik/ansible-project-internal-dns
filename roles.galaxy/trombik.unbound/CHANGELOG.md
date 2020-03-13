@@ -1,3 +1,11 @@
+## Release 4.0.0
+
+* 8ba6d1b bugfix: introduce `unbound_force_flush_handlers`
+* 488af98 bugfix: remove `if else` for old version of unbound
+* 6f3e7c6 backward incompatible: change the meaning of unbound_flags
+* a6e45a8 bugfix: QA
+* 647b99b bugfix: use `result is match` style
+
 ## Release 3.1.1
 
 * fa08d26 bugfix: s/x509-certificate/x509_certificate/g
