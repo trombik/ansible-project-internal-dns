@@ -20,7 +20,7 @@ None
 | `unbound_flags_default` | dict of default variables and their values in startup scripts | `{{ __unbound_flags_default }}` |
 | `unbound_script_dir` | directory to install scripts in `files` | `{{ __unbound_script_dir }}` |
 | `unbound_directory` | work directory of `unbound` | `{{ __unbound_directory }}` |
-| `unbound_include_role_x509_certificate` | include and execute `trombik.x509-certificate` when true | `no` |
+| `unbound_include_role_x509_certificate` | include and execute `trombik.x509_certificate` when true | `no` |
 | `unbound_config_server_key_file` | `server-key-file` | `{{ unbound_conf_dir }}/unbound_server.key` |
 | `unbound_config_server_cert_file` | `server-cert-file` | `{{ unbound_conf_dir }}/unbound_server.pem` |
 | `unbound_config_control_key_file` | `control-key-file` | `{{ unbound_conf_dir }}/unbound_control.key` |
@@ -99,7 +99,7 @@ value is empty string.
 
 # Dependencies
 
-* [`trombik.x509-certificate`](https://github.com/trombik/ansible-role-x509-certificate)
+* [`trombik.x509_certificate`](https://github.com/trombik/ansible-role-x509_certificate)
   if `unbound_include_role_x509_certificate` is set to true value.
 
 # Example Playbook

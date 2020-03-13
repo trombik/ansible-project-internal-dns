@@ -1,3 +1,12 @@
+## Release 3.1.1
+
+* fa08d26 bugfix: s/x509-certificate/x509_certificate/g
+* 3b461b2 bugfix: ignore extra_roles
+* a851285 bugfix: s/x509-certificate/x509_certificate/g
+* e277017 bugfix: update supported platform versions
+* 2d344d0 bugfix: lint
+* d151a04 bugfix: QA
+
 ## Release 3.0.1
 
 * 217ab1b feature: support FreeBSD 10.4

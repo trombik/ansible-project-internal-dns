@@ -23,16 +23,6 @@ provisioner:
   ansible_vault_password_file: <%= File.expand_path(ENV['ANSIBLE_VAULT_PASSWORD_FILE'] || '') %>
 
 platforms:
-  - name: freebsd-10.4-amd64
-    driver:
-      box: trombik/ansible-freebsd-10.4-amd64
-      box_check_update: false
-    driver_config:
-      ssh:
-        shell: '/bin/sh'
-    provisioner:
-      extra_vars:
-        ansible_python_interpreter: '/usr/local/bin/python'
   - name: freebsd-11.2-amd64
     driver:
       box: trombik/ansible-freebsd-11.2-amd64
@@ -43,10 +33,9 @@ platforms:
     provisioner:
       extra_vars:
         ansible_python_interpreter: '/usr/local/bin/python'
-
-  - name: openbsd-6.2-amd64
+  - name: freebsd-12.0-amd64
     driver:
-      box: trombik/ansible-openbsd-6.2-amd64
+      box: trombik/ansible-freebsd-12.0-amd64
       box_check_update: false
     driver_config:
       ssh:
@@ -55,9 +44,9 @@ platforms:
       extra_vars:
         ansible_python_interpreter: '/usr/local/bin/python'
 
-  - name: openbsd-6.3-amd64
+  - name: openbsd-6.4-amd64
     driver:
-      box: trombik/ansible-openbsd-6.3-amd64
+      box: trombik/ansible-openbsd-6.4-amd64
       box_check_update: false
     driver_config:
       ssh:
@@ -65,6 +54,17 @@ platforms:
     provisioner:
       extra_vars:
         ansible_python_interpreter: '/usr/local/bin/python'
+
+  - name: openbsd-6.5-amd64
+    driver:
+      box: trombik/ansible-openbsd-6.5-amd64
+      box_check_update: false
+    driver_config:
+      ssh:
+        shell: '/bin/sh'
+    provisioner:
+      extra_vars:
+        ansible_python_interpreter: '/usr/local/bin/python3'
 
   - name: ubuntu-16.04-amd64
     driver:
@@ -76,9 +76,9 @@ platforms:
       box: trombik/ansible-ubuntu-18.04-amd64
       box_check_update: false
 
-  - name: centos-7.3-x86_64
+  - name: centos-7.4-x86_64
     driver:
-      box: trombik/ansible-centos-7.3-x86_64
+      box: trombik/ansible-centos-7.4-x86_64
       box_check_update: false
 
 suites:
