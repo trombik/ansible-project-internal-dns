@@ -3,9 +3,6 @@
 
 - include_vars: "{{ ansible_os_family }}.yml"
 
-- set_fact:
-    unbound_flags_merged: "{{ unbound_flags_default | combine(unbound_flags) }}"
-
 - name: Include fact-{{ ansible_os_family }}.yml
   include_tasks: "fact-{{ ansible_os_family }}.yml"
 
@@ -24,7 +21,7 @@
 - name: Assert unbound_version is in the expected format
   assert:
     that:
-      - unbound_version | match('^\d+\.\d+\.\d+$')
+      - unbound_version is match('^\d+\.\d+\.\d+$')
     msg: |
       [BUG] unbound_version does not match expected version pattern.
       This means the role has a bug in it.
@@ -104,3 +101,10 @@
   service:
     name: "{{ unbound_service }}"
     state: started
+
+- name: Include flush_handlers.yml and force flush_handlers meta action
+  # XXX `meta` module does not honor `when`.
+  # see https://github.com/ansible/ansible/issues/41313
+  include_tasks: flush_handlers.yml
+  when:
+    - unbound_force_flush_handlers

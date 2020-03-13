@@ -16,8 +16,7 @@ None
 | `unbound_package` | package name of `unbound` | `unbound` |
 | `unbound_conf_dir` | path to config directory | `{{ __unbound_conf_dir }}` |
 | `unbound_conf_file` | path to `unbound.conf(5)` | `{{ unbound_conf_dir }}/unbound.conf` |
-| `unbound_flags` | dict of variables and their values in startup scripts. this variable is combined with `unbound_flags_default` (see below). | `{}` |
-| `unbound_flags_default` | dict of default variables and their values in startup scripts | `{{ __unbound_flags_default }}` |
+| `unbound_flags` | see below | `""` |
 | `unbound_script_dir` | directory to install scripts in `files` | `{{ __unbound_script_dir }}` |
 | `unbound_directory` | work directory of `unbound` | `{{ __unbound_directory }}` |
 | `unbound_include_role_x509_certificate` | include and execute `trombik.x509_certificate` when true | `no` |
@@ -26,32 +25,29 @@ None
 | `unbound_config_control_key_file` | `control-key-file` | `{{ unbound_conf_dir }}/unbound_control.key` |
 | `unbound_config_control_cert_file` | `control-cert-file` | `{{ unbound_conf_dir }}/unbound_control.pem` |
 | `unbound_config` | content of `unbound.conf(5)` | `""` |
+| `unbound_force_flush_handlers` | if true, run [`flush_handlers` meta action](https://docs.ansible.com/ansible/latest/modules/meta_module.html) at the end of all tasks in the role, instead of at the end of all the `ansible` play | `no` |
 
 ## `unbound_flags`
 
-This variable is a dict of variables of startup configuration files, such as
-files under `/etc/default`, `/etc/sysconfig`, and `/etc/rc.conf.d`. It is
-assumed that the files are `source`d by startup mechanism with `sh(1)`. A key
-in the dict is name of the variable in the file, and the value of the key is
-value of the variable. The variable is combined with a variable whose name is
-same as this variable, but postfixed with `_default` (explained below) and the
-result creates the startup configuration file, usually a file consisting of
-lines of `key="value"` under appropriate directory for the platform.
+This variable is used for overriding defaults for startup scripts. In Debian
+variants, the value is the content of `/etc/default/unbound`. In RedHat
+variants, it is the content of `/etc/sysconfig/unbound`. In FreeBSD, it
+is the content of `/etc/rc.conf.d/unbound`. In OpenBSD, the value is
+passed to `rcctl set unbound flags`.
 
-When the platform is OpenBSD, the above explanation does not apply. In this
-case, the only valid key is `flags` and the value of it is passed to
-`daemon_flags` described in [`rc.conf(5)`](http://man.openbsd.org/rc.conf),
-where `daemon` is the name of one of the `rc.d(8)` daemon control scripts.
+## Notes about `unbound_force_flush_handlers`
 
-## `unbound_flags_default`
+When `unbound_force_flush_handlers` is `yes`, all the pending handlers are
+_flushed_, meaning, all pending handlers on other hosts in the play, including
+ones that do not play _this role_, are executed. You have to ensure this
+side-effect will not cause issues in the play. One solution is, do not run a
+play with this role on other hosts. The other one is to ensure all other roles
+or tasks _before_ this role will not trigger any handler.
 
-This variable is a dict of keys and values derived from upstream's default
-configuration, and is supposed to be a constant unless absolutely necessary. By
-default, the role creates a startup configuration file for each platform with
-this variable, identical to default one.
-
-When the platform is OpenBSD, the variable has a single key, `flags` and its
-value is empty string.
+`meta` ansible module does not support `when`. If you set
+`unbound_force_flush_handlers` to `yes`, `ansible` warns that "flush_handlers
+task does not support when conditional". There is no way to suppress the
+warning. See also [issue 4131](https://github.com/ansible/ansible/issues/41313).
 
 ## Debian
 
@@ -62,7 +58,6 @@ value is empty string.
 | `__unbound_conf_dir` | `/etc/unbound` |
 | `__unbound_script_dir` | `/usr/bin` |
 | `__unbound_directory` | `/etc/unbound` |
-| `__unbound_flags_default` | `{}` |
 
 ## FreeBSD
 
@@ -73,7 +68,6 @@ value is empty string.
 | `__unbound_conf_dir` | `/usr/local/etc/unbound` |
 | `__unbound_script_dir` | `/usr/local/bin` |
 | `__unbound_directory` | `/usr/local/etc/unbound` |
-| `__unbound_flags_default` | `{}` |
 
 ## OpenBSD
 
@@ -84,7 +78,6 @@ value is empty string.
 | `__unbound_conf_dir` | `/var/unbound/etc` |
 | `__unbound_script_dir` | `/usr/local/bin` |
 | `__unbound_directory` | `/var/unbound` |
-| `__unbound_flags_default` | `{"flags"=>""}` |
 
 ## RedHat
 
@@ -95,7 +88,6 @@ value is empty string.
 | `__unbound_conf_dir` | `/etc/unbound` |
 | `__unbound_script_dir` | `/usr/bin` |
 | `__unbound_directory` | `/etc/unbound` |
-| `__unbound_flags_default` | `{"UNBOUND_OPTIONS"=>""}` |
 
 # Dependencies
 
@@ -105,20 +97,22 @@ value is empty string.
 # Example Playbook
 
 ```yaml
+---
 - hosts: localhost
   roles:
     - ansible-role-unbound
   vars:
-    debian_flags:
-      DAEMON_OPTS: "-v -c {{ unbound_conf_file }}"
-    freebsd_flags:
-      unbound_flags: "-v -c {{ unbound_conf_file }}"
-    redhat_flags:
-      UNBOUND_OPTIONS: "-v -c {{ unbound_conf_file }}"
-    openbsd_flags:
-      flags: "-v -c {{ unbound_conf_file }}"
+    os_unbound_flags:
+      FreeBSD: |
+        unbound_flags="-v"
+        unbound_config="{{ unbound_conf_file }}"
+      OpenBSD: "-v -c {{ unbound_conf_file }}"
+      Debian: |
+        DAEMON_OPTS="-v -c {{ unbound_conf_file }}"
+      RedHat: |
+        UNBOUND_OPTIONS="-v -c {{ unbound_conf_file }}"
 
-    unbound_flags: "{% if ansible_os_family == 'Debian' %}{{ debian_flags }}{% elif ansible_os_family == 'FreeBSD' %}{{ freebsd_flags }}{% elif ansible_os_family == 'RedHat' %}{{ redhat_flags }}{% elif ansible_os_family == 'OpenBSD' %}{{ openbsd_flags }}{% endif %}"
+    unbound_flags: "{{ os_unbound_flags[ansible_os_family] }}"
 
     unbound_config_chroot: ""
     unbound_config: |
@@ -162,10 +156,10 @@ value is empty string.
         stub-addr: "8.8.8.8"
       remote-control:
         control-enable: yes
-      {% if unbound_version | version_compare('1.5.2', '>=') %}
+      {% if unbound_version is version_compare('1.5.2', '>=') %}
         control-use-cert: no
       {% endif %}
-      {% if unbound_version | version_compare('1.5.3', '<=') %}
+      {% if unbound_version is version_compare('1.5.3', '<=') %}
         control-interface: 127.0.0.1
       {% else %}
         control-interface: /var/run/unbound.sock

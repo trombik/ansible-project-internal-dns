@@ -3,17 +3,16 @@
   roles:
     - ansible-role-unbound
   vars:
-    debian_flags:
-      DAEMON_OPTS: "-v -c {{ unbound_conf_file }}"
-    freebsd_flags:
-      unbound_flags: "-v -c {{ unbound_conf_file }}"
-    redhat_flags:
-      UNBOUND_OPTIONS: "-v -c {{ unbound_conf_file }}"
-    openbsd_flags:
-      flags: "-v -c {{ unbound_conf_file }}"
-
-    unbound_flags: "{% if ansible_os_family == 'Debian' %}{{ debian_flags }}{% elif ansible_os_family == 'FreeBSD' %}{{ freebsd_flags }}{% elif ansible_os_family == 'RedHat' %}{{ redhat_flags }}{% elif ansible_os_family == 'OpenBSD' %}{{ openbsd_flags }}{% endif %}"
-
+    os_unbound_flags:
+      Debian: |
+        DAEMON_OPTS='-v -c {{ unbound_conf_file }}'
+      FreeBSD: |
+        unbound_flags="-v"
+        unbound_config="{{ unbound_conf_file }}"
+      RedHat: |
+        UNBOUND_OPTIONS="-v -c {{ unbound_conf_file }}"
+      OpenBSD: "-v -c {{ unbound_conf_file }}"
+    unbound_flags: "{{ os_unbound_flags[ansible_os_family] }}"
     x509_certificate:
       - name: unbound
         state: present
@@ -122,14 +121,8 @@
         stub-addr: "8.8.8.8"
       remote-control:
         control-enable: yes
-      {% if unbound_version | version_compare('1.5.2', '>=') %}
         control-use-cert: no
-      {% endif %}
-      {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('14.04', '<=')) or (ansible_distribution == 'CentOS' and ansible_distribution_version | version_compare('7.4.1708', '<=')) %}
-        control-interface: 127.0.0.1
-      {% else %}
         control-interface: /var/run/unbound.sock
-      {% endif %}
         server-key-file: {{ unbound_conf_dir }}/unbound_server.key
         server-cert-file: {{ unbound_conf_dir }}/unbound_server.pem
         control-key-file: {{ unbound_conf_dir }}/unbound_control.key
