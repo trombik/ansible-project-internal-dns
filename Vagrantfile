@@ -102,7 +102,7 @@ Vagrant.configure("2") do |config|
         end
         c.vm.provision :ansible do |ansible|
           ansible_extra_vars_staging = {
-            ansible_python_interpreter: "/usr/local/bin/python",
+            ansible_python_interpreter: inventory["all"]["hosts"][hostname].key?("ansible_python_interpreter") ? inventory["all"]["hosts"][hostname]["ansible_python_interpreter"] : "/usr/local/bin/python",
             ansible_user: "vagrant",
             ansible_ssh_private_key_file: Pathname.new("~/.vagrant.d/insecure_private_key").expand_path.to_s,
             http_proxy: http_proxy,
