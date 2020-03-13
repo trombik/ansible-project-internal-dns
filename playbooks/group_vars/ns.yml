@@ -2,6 +2,7 @@
 resolver_nameservers:
   - "{{ project_domain_name_servers }}"
 
+unbound_force_flush_handlers: yes
 unbound_config: |
   server:
     chroot: ""
