@@ -60,3 +60,8 @@ describe command "date +%z" do
   its(:stderr) { should eq "" }
   its(:stdout) { should match(/^\+0700$/) }
 end
+
+describe file "/etc/resolv.conf" do
+  it { should be_file }
+  its(:content) { should match(/^domain #{domain_name}$/) }
+end
