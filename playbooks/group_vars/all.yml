@@ -4,3 +4,6 @@ hostname_fqdn: "{{ inventory_hostname }}"
 localtime_zone:
   OpenBSD: Asia/Bangkok
   FreeBSD: Asia/Bangkok
+
+resolver_config: |
+  domain {{ ansible_domain }}
