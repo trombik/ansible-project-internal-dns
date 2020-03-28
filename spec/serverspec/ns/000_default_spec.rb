@@ -1,16 +1,17 @@
 require_relative "../spec_helper"
 
-domain_name = case test_environment
-              when "virtualbox"
-                "i.trombik.org"
-              end
+domain_name = "i.trombik.org"
 domain_name_servers = case test_environment
                       when "virtualbox"
                         "172.16.100.254"
+                      when "prod"
+                        "192.168.99.251"
                       end
 dhcp_flags = case test_environment
              when "virtualbox"
                "em1"
+             when "prod"
+               "smsc0"
              end
 
 subnets = case test_environment
@@ -40,7 +41,8 @@ records = case test_environment
             ]
           when "prod"
             [
-              { q: "pkg.i.trombik.org.", type: "CNAME", a: "t440s.i.trombik.org.", ttl: 86_400 }
+              { q: "pkg.i.trombik.org.", type: "CNAME", a: "t440s.i.trombik.org.", ttl: 600 },
+              { q: "build.i.trombik.org.", type: "CNAME", a: "t440s.i.trombik.org.", ttl: 86400 }
             ]
           end
 
@@ -60,7 +62,7 @@ describe file "/etc/dhcpd.conf" do
   end
 end
 
-describe command "#{dig_command} example.org @10.0.2.15" do
+describe command "#{dig_command} example.org" do
   its(:exit_status) { should eq 0 }
   its(:stdout) { should match(/^;.*status: NOERROR/) }
 end
