@@ -24,6 +24,14 @@ unbound_config: |
   {% for host in project_hosts %}
     local-data: "{{ host['name'] }}.{{ ansible_domain }}. 86400 IN A {{ host['ipv4'] }}"
   {% endfor %}
+  {% for record in project_records %}
+    local-data: "{{ record['name'] }}.{{ ansible_domain }}. {{ record['ttl'] | default(86400) }} IN {{ record['type'] | default('A') }} {{ record['rdata'] }}"
+  {% endfor %}
+  forward-zone:
+    name: sinet.com.kh.
+    forward-addr: 180.178.124.12
+    forward-addr: 96.9.64.12
+
 remote-control:
   control-enable: yes
   control-use-cert: no

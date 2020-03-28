@@ -33,6 +33,16 @@ dig_command = case os[:family]
               when "freebsd"
                 "drill"
               end
+records = case test_environment
+          when "virtualbox"
+            [
+              { q: "foo.i.trombik.org.", type: "A", a: "192.168.1.3" }
+            ]
+          when "prod"
+            [
+              { q: "pkg.i.trombik.org.", type: "CNAME", a: "t440s.i.trombik.org." }
+            ]
+          end
 
 describe file "/etc/rc.conf.local" do
   it { should be_file }
@@ -64,4 +74,12 @@ end
 describe file "/etc/resolv.conf" do
   it { should be_file }
   its(:content) { should match(/^domain #{domain_name}$/) }
+end
+
+records.each do |record|
+  describe command "#{dig_command} #{record[:type]} #{record[:q]}" do
+    its(:exit_status) { should eq 0 }
+    its(:stdout) { should match(/^;.*status: NOERROR/) }
+    its(:stdout) { should match(/^#{record[:q]}\s+\d+\s+IN\s+#{record[:type]}\s+#{record[:a]}$/) }
+  end
 end

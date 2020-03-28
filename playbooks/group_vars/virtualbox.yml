@@ -26,3 +26,7 @@ project_hosts:
   - name: ox230
     mac: 0:c0:c3:22:46:82
     ipv4: 192.168.1.4
+project_records:
+  - name: foo
+    type: A
+    rdata: 192.168.1.3
