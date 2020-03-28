@@ -36,11 +36,11 @@ dig_command = case os[:family]
 records = case test_environment
           when "virtualbox"
             [
-              { q: "foo.i.trombik.org.", type: "A", a: "192.168.1.3" }
+              { q: "foo.i.trombik.org.", type: "A", a: "192.168.1.3", ttl: 600 }
             ]
           when "prod"
             [
-              { q: "pkg.i.trombik.org.", type: "CNAME", a: "t440s.i.trombik.org." }
+              { q: "pkg.i.trombik.org.", type: "CNAME", a: "t440s.i.trombik.org.", ttl: 86_400 }
             ]
           end
 
@@ -80,6 +80,6 @@ records.each do |record|
   describe command "#{dig_command} #{record[:type]} #{record[:q]}" do
     its(:exit_status) { should eq 0 }
     its(:stdout) { should match(/^;.*status: NOERROR/) }
-    its(:stdout) { should match(/^#{record[:q]}\s+\d+\s+IN\s+#{record[:type]}\s+#{record[:a]}$/) }
+    its(:stdout) { should match(/^#{record[:q]}\s+#{record[:ttl]}\s+IN\s+#{record[:type]}\s+#{record[:a]}$/) }
   end
 end
