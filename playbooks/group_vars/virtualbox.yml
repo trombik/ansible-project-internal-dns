@@ -29,4 +29,5 @@ project_hosts:
 project_records:
   - name: foo
     type: A
+    ttl: 600
     rdata: 192.168.1.3
