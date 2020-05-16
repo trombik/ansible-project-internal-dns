@@ -41,8 +41,9 @@ records = case test_environment
             ]
           when "prod"
             [
-              { q: "pkg.i.trombik.org.", type: "CNAME", a: "t440s.i.trombik.org.", ttl: 600 },
-              { q: "build.i.trombik.org.", type: "CNAME", a: "t440s.i.trombik.org.", ttl: 86400 }
+              { q: "pkg.i.trombik.org.", type: "A", a: "192.168.99.203", ttl: 600 },
+              { q: "build.i.trombik.org.", type: "A", a: "192.168.99.203", ttl: 86_400 },
+              { q: "core1.i.trombik.org.", type: "A", a: "192.168.100.1", ttl: 86_400 }
             ]
           end
 
