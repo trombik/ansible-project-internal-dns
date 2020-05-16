@@ -52,10 +52,12 @@ dhcpd_openbsd_conf: |
     range {{ subnet['range_from'] }} {{ subnet['range_to'] }};
 
   {% for host in project_hosts %}
+  {% if 'mac' in host %}
     host {{ host['name'] }} {
       hardware ethernet {{ host['mac'] }};
       fixed-address {{ host['name'] }}.{{ ansible_domain }};
     }
+  {% endif %}
   {% endfor %}
   }
   {% endfor %}
