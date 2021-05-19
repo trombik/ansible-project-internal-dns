@@ -8,10 +8,10 @@ GIT
 
 GIT
   remote: https://github.com/trombik/ansible-vault
-  revision: 839ea69dbf8a4fe85e0ab4d00aa20e2bf98876a2
+  revision: d5844508de670b401bce18e013c6d79475e4deb7
   branch: master
   specs:
-    ansible-vault (0.1.0)
+    ansible-vault (0.2.0)
 
 GIT
   remote: https://github.com/trombik/infrataster-plugin-firewall.git
@@ -59,51 +59,60 @@ GEM
   specs:
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    ast (2.4.0)
-    capybara (3.31.0)
+    ast (2.4.2)
+    capybara (3.35.3)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
-      regexp_parser (~> 1.5)
+      regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     cliver (0.3.2)
     deep_merge (1.1.1)
-    diff-lcs (1.3)
-    faraday (0.17.3)
+    diff-lcs (1.4.4)
+    faraday (1.4.1)
+      faraday-excon (~> 1.1)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.1)
       multipart-post (>= 1.2, < 3)
-    faraday_middleware (0.14.0)
-      faraday (>= 0.7.4, < 1.0)
+      ruby2_keywords (>= 0.0.4)
+    faraday-excon (1.1.0)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.1.0)
+    faraday_middleware (1.0.0)
+      faraday (~> 1.0)
     highline (1.7.10)
-    mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
-    multi_json (1.14.1)
+    mini_mime (1.1.0)
+    mini_portile2 (2.5.1)
+    multi_json (1.15.0)
     multipart-post (2.1.1)
-    net-scp (2.0.0)
-      net-ssh (>= 2.6.5, < 6.0.0)
+    net-scp (3.0.0)
+      net-ssh (>= 2.6.5, < 7.0.0)
     net-ssh (5.2.0)
     net-ssh-gateway (2.0.0)
       net-ssh (>= 4.0.0)
     net-telnet (0.1.1)
-    nokogiri (1.10.9)
-      mini_portile2 (~> 2.4.0)
-    parallel (1.19.1)
-    parser (2.7.0.4)
-      ast (~> 2.4.0)
+    nokogiri (1.11.4)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
+    parallel (1.20.1)
+    parser (2.7.2.0)
+      ast (~> 2.4.1)
     poltergeist (1.18.1)
       capybara (>= 2.1, < 4)
       cliver (~> 0.3.1)
       websocket-driver (>= 0.2.0)
-    powerpack (0.1.2)
-    public_suffix (4.0.3)
+    powerpack (0.1.3)
+    public_suffix (4.0.6)
+    racc (1.5.2)
     rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rainbow (2.2.2)
       rake
     rake (12.3.3)
-    regexp_parser (1.7.0)
+    regexp_parser (2.1.1)
     retries (0.0.5)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
@@ -130,21 +139,22 @@ GEM
       rainbow (>= 2.2.2, < 3.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-progressbar (1.10.1)
+    ruby-progressbar (1.11.0)
+    ruby2_keywords (0.0.4)
     serverspec (2.41.5)
       multi_json
       rspec (~> 3.0)
       rspec-its
       specinfra (~> 2.72)
     sfl (2.3)
-    specinfra (2.82.12)
+    specinfra (2.82.25)
       net-scp
       net-ssh (>= 2.7)
       net-telnet (= 0.1.1)
       sfl
-    thor (1.0.1)
+    thor (1.1.0)
     unicode-display_width (1.7.0)
-    websocket-driver (0.7.1)
+    websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     xpath (3.2.0)
@@ -159,6 +169,7 @@ DEPENDENCIES
   highline (~> 1.7.8)
   infrataster (>= 0.3.2)!
   infrataster-plugin-firewall (>= 0.1.4)!
+  net-ssh (< 6.0.0)
   rake (~> 12.3.3)
   retries (~> 0.0.5)
   rspec (~> 3.4.0)
@@ -169,4 +180,4 @@ DEPENDENCIES
   vagrant-ssh-config!
 
 BUNDLED WITH
-   2.0.2
+   2.2.16

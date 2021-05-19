@@ -6,6 +6,7 @@ AllCops:
     - "roles.galaxy/**/*"
     - "vendor/**/*"
     - "tests/integration/**/roles/*"
+    - "path/**/*"
   DisplayCopNames: true
   ExtraDetails: true
   DisplayStyleGuide: true
