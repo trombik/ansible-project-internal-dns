@@ -7,7 +7,7 @@ gem "highline", "~> 1.7.8"
 # https://github.com/net-ssh/net-ssh/issues/764
 # https://github.com/net-ssh/net-ssh/pull/765
 gem "net-ssh", "< 6.0.0"
-gem "rake", "~> 12.3.3" # workaround an issue when ruby version > 2.2 https://github.com/sickill/rainbow/issues/44
+gem "rake"
 gem "retries", "~> 0.0.5"
 gem "rspec", "~> 3.4.0"
 gem "rspec-retry", "~> 0.5.5"
