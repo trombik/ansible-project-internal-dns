@@ -4,7 +4,7 @@ all:
     ns1.i.trombik.org:
       vagrant_priority: 20
       ansible_host: 172.16.100.254
-      vagrant_box: trombik/ansible-openbsd-6.6-amd64
+      vagrant_box: trombik/ansible-openbsd-6.9-amd64
       ansible_python_interpreter: /usr/local/bin/python3
     client1.i.trombik.org:
       vagrant_priority: 10
